@@ -1,7 +1,7 @@
 from numpy import array, zeros, pi, cos, sin, sqrt, arccos
 import curses
 
-from fps_utils import load_map, draw_map
+from fps_utils import load_map, draw_map, place_player_in_map
 
 def curses_properties():
     curses.noecho()
@@ -21,6 +21,17 @@ def main(console: 'Curses_Window'):
     """
     # Load map
     map, w, h = load_map('map1')
+
+    # Place player in map
+    # Player can't be place either in a wall nor outside the map
+    player_location = place_player_in_map(map, w, h, None)
+    if player_location is None:
+        raise ValueError('Player can\'t be place in a wall')
+    else:
+        px, py = player_location[0], player_location[1]
+    
+    # Here update players location in map array
+    map[int(px)][int(py)] = 2
 
     # Main loop
     while True:
