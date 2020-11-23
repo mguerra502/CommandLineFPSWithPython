@@ -1,7 +1,8 @@
 from numpy import array, zeros, pi, cos, sin, sqrt, arccos
+from time import time
 import curses
 
-from fps_utils import load_map, draw_map, place_player_in_map, handle_keystrokes
+from fps_utils import load_map, draw_map, place_player_in_map, handle_keystrokes, show_stats
 
 def curses_properties():
     curses.noecho()
@@ -33,8 +34,17 @@ def main(console: 'Curses_Window'):
     # Here update players location in map array
     map[int(px)][int(py)] = 2
 
+    # Initialise elapsed time variables
+    time_previous_frame = time()
+    time_current_frame = time()
+
     # Main loop
     while True:
+        # Calculate the difference in time between frames
+        time_current_frame = time()
+        timeframe = time_current_frame - time_previous_frame
+        time_previous_frame = time_current_frame
+
         # Handle Player movement
         try:
             px, py = handle_keystrokes(console.getkey(), map, px, py)
@@ -50,6 +60,7 @@ def main(console: 'Curses_Window'):
 
         # Draw map on console
         draw_map(console, map)
+        show_stats(console, int(1/timeframe), px, py, h)
         
         # Refresh console
         console.refresh()
