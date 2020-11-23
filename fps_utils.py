@@ -65,30 +65,82 @@ def draw_map(console: 'Curses_Window', map: '2D_Numpy_Array'):
 
         console.addstr(j, 0, map_str, curses.color_pair(17))
 
-def place_player_in_map(map: '2D_Numpy_Array', w: 'integer', h: 'integer', player_location: 'tuple(integer, integer) or None'):
+def place_player_in_map(map: '2D_Numpy_Array', w: 'integer', h: 'integer', player_location: 'tuple(float, float) or None'):
     """This method place player in the map
 
     Args:
         map (2D_Numpy_Array): 2D Array representation of the map
         w (integer): Width of the map
         h (integer): Width of the map
-        player_location (tuple or None): Player location. If None, player is located randomly 
+        player_location (tuple(float, float) or None): Player's (x, y) position. If None, player is located randomly 
 
     Returns:
-        tuple(integer, integer): Player Location
+        tuple(float, float) or None: Player's (x, y) position. None when player is placed inside a wall
     """
     if player_location is None:
-        px, py = randint(1, w - 2), randint(1, h - 2)
+        px, py = float(randint(1, w - 2)), float(randint(1, h - 2))
         while True:
-            if map[px, py] != 1:
-                break
+            if map[int(px), int(py)] != 1:
+                return tuple((px, py))
             else:
-                px, py = randint(1, w - 2), randint(1, h - 2)
-
-        return tuple((px, py))
+                px, py = float(randint(1, w - 2)), float(randint(1, h - 2))
     else:
-        px, py = player_location[0], player_location[1]
-        if map[px, py] == 1:
+        px, py = float(player_location[0]), float(player_location[1])
+        if map[int(px), int(py)] == 1:
             return None
         
         return tuple((px, py))
+
+def handle_keystrokes(key_stroke: 'Key_Event', map: '2D_Numpy_Array', px: 'float', py: 'float'):
+    """This Method handles keystrokes by the user
+
+    Args:
+        key_stroke (Key_Event): Char representing the keystroke by the user
+        map (2D_Numpy_Array): 2D Array representation of the map
+        px (float): Player's x position
+        py (float): Player's y position
+
+    Returns:
+        px (float): Player's x position
+        py (float): Player's y position
+    """
+    # Quit game
+    if key_stroke == 'x':
+        return
+
+    # move forward
+    if key_stroke == 'w':
+        if map[int(px), int(py - 1)] != 1:
+            map[int(px), int(py)] = 0
+            py = py - 1
+            map[int(px), int(py)] = 2
+            return px, py
+
+    # move backwards
+    if key_stroke == 's':
+        if map[int(px), int(py + 1)] != 1:
+            map[int(px), int(py)] = 0
+            py = py + 1
+            map[int(px), int(py)] = 2
+            return px, py
+
+    # Rotate left
+    # This one should be strafe left
+    if key_stroke == 'a':
+        if map[int(px - 1), int(py)] != 1:
+            map[int(px), int(py)] = 0
+            px = px - 1
+            map[int(px), int(py)] = 2
+            return px, py
+
+    # Rotate right
+    # This one should be strafe right
+    if key_stroke == 'd':
+        if map[int(px + 1), int(py)] != 1:
+            map[int(px), int(py)] = 0
+            px = px + 1
+            map[int(px), int(py)] = 2
+            return px, py
+
+    # Finally, if not key matched then return same px, py
+    return px, py
