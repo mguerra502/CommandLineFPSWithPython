@@ -1,4 +1,5 @@
 from numpy import zeros
+from random import randint
 import curses
 
 def load_map(map_name: 'string'):
@@ -63,3 +64,31 @@ def draw_map(console: 'Curses_Window', map: '2D_Numpy_Array'):
             map_str += '\n'
 
         console.addstr(j, 0, map_str, curses.color_pair(17))
+
+def place_player_in_map(map: '2D_Numpy_Array', w: 'integer', h: 'integer', player_location: 'tuple(integer, integer) or None'):
+    """This method place player in the map
+
+    Args:
+        map (2D_Numpy_Array): 2D Array representation of the map
+        w (integer): Width of the map
+        h (integer): Width of the map
+        player_location (tuple or None): Player location. If None, player is located randomly 
+
+    Returns:
+        tuple(integer, integer): Player Location
+    """
+    if player_location is None:
+        px, py = randint(1, w - 2), randint(1, h - 2)
+        while True:
+            if map[px, py] != 1:
+                break
+            else:
+                px, py = randint(1, w - 2), randint(1, h - 2)
+
+        return tuple((px, py))
+    else:
+        px, py = player_location[0], player_location[1]
+        if map[px, py] == 1:
+            return None
+        
+        return tuple((px, py))
