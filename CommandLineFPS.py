@@ -1,7 +1,7 @@
 from numpy import array, zeros, pi, cos, sin, sqrt, arccos
 import curses
 
-from fps_utils import load_map, draw_map, place_player_in_map
+from fps_utils import load_map, draw_map, place_player_in_map, handle_keystrokes
 
 def curses_properties():
     curses.noecho()
@@ -35,6 +35,16 @@ def main(console: 'Curses_Window'):
 
     # Main loop
     while True:
+        # Handle Player movement
+        try:
+            px, py = handle_keystrokes(console.getkey(), map, px, py)
+        except TypeError:
+            # This is to handle x key (exit)
+            break
+        except:
+            # This handles no user input
+            pass
+
         # Clear console
         console.erase()
 
