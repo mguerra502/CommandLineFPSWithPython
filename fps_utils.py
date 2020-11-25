@@ -40,16 +40,23 @@ def load_map(map_name: 'string'):
 
     return map_array, w, h
 
-def draw_map(console: 'Curses_Window', map: '2D_Numpy_Array'):
+def draw_map(console: 'Curses_Window', map: '2D_Numpy_Array', px: 'float', py: 'float', depth: 'integer'):
     """This method is used to draw the map, coming from the 2D_Numpy_Array in the console,
 
     Args:
         console (Curses_Window): A window defined using the curses library
         map (2D_Numpy_Array): 2D Array representation of the map
+        px (float): Playe's x position
+        py (float): Playe's y position
+        depth (integer): Player's depth of vision
     """
-    for j in range(len(map[0])):
+    x_min = max(int(px) - depth, 0)
+    x_max = min(int(px) + depth, len(map))
+    y_min = max(int(py) - depth, 0)
+    y_max = min(int(py) + depth, len(map[0]))
+    for j in range(y_min, y_max):
         map_str = ''
-        for i in range(len(map)):
+        for i in range(x_min, x_max):
             if map[i, j] == 1:
                 # Draw a wall
                 map_str += u'\u2590'
@@ -63,9 +70,9 @@ def draw_map(console: 'Curses_Window', map: '2D_Numpy_Array'):
         if j != len(map[0]) - 1:
             map_str += '\n'
 
-        console.addstr(j, 0, map_str, curses.color_pair(17))
+        console.addstr(j - y_min, 0, map_str, curses.color_pair(17))
 
-def show_stats(console: 'Curses_Window', fps: 'integer', px: 'float', py: 'float', h: 'integer'):
+def show_stats(console: 'Curses_Window', fps: 'integer', px: 'float', py: 'float', depth: 'integer'):
     """This method shows player's stats in the console
 
     Args:
@@ -73,11 +80,11 @@ def show_stats(console: 'Curses_Window', fps: 'integer', px: 'float', py: 'float
         fps (integer): Frames per second
         px (float): Player's x position
         py (float): Player's y position
-        h (integer): Height of the map
+        depth (integer): Player's depth of vision
     """
-    console.addstr(h + 2, 0, f'Fps : {fps}', curses.color_pair(17))
-    console.addstr(h + 3, 0, f'x : {px}', curses.color_pair(17))
-    console.addstr(h + 4, 0, f'y : {py}', curses.color_pair(17))
+    console.addstr(2*depth + 2, 0, f'Fps : {fps}', curses.color_pair(17))
+    console.addstr(2*depth + 3, 0, f' x  : {px}', curses.color_pair(17))
+    console.addstr(2*depth + 4, 0, f' y  : {py}', curses.color_pair(17))
 
 def place_player_in_map(map: '2D_Numpy_Array', w: 'integer', h: 'integer', player_location: 'tuple(float, float) or None'):
     """This method place player in the map
