@@ -65,6 +65,20 @@ def draw_map(console: 'Curses_Window', map: '2D_Numpy_Array'):
 
         console.addstr(j, 0, map_str, curses.color_pair(17))
 
+def show_stats(console: 'Curses_Window', fps: 'integer', px: 'float', py: 'float', h: 'integer'):
+    """This method shows player's stats in the console
+
+    Args:
+        console (Curses_Window): A window defined using the curses library
+        fps (integer): Frames per second
+        px (float): Player's x position
+        py (float): Player's y position
+        h (integer): Height of the map
+    """
+    console.addstr(h + 2, 0, f'Fps : {fps}', curses.color_pair(17))
+    console.addstr(h + 3, 0, f'x : {px}', curses.color_pair(17))
+    console.addstr(h + 4, 0, f'y : {py}', curses.color_pair(17))
+
 def place_player_in_map(map: '2D_Numpy_Array', w: 'integer', h: 'integer', player_location: 'tuple(float, float) or None'):
     """This method place player in the map
 
