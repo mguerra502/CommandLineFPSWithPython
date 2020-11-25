@@ -21,7 +21,7 @@ def main(console: 'Curses_Window'):
         console (Curses_Window): A window defined using the curses library
     """
     # Load map
-    map, w, h = load_map('map1')
+    map, w, h = load_map('map2')
 
     # Place player in map
     # Player can't be place either in a wall nor outside the map
@@ -33,6 +33,10 @@ def main(console: 'Curses_Window'):
     
     # Here update players location in map array
     map[int(px)][int(py)] = 2
+
+    # Vision depth
+    # TODO: This is a value that could change
+    vision_depth = 8
 
     # Initialise elapsed time variables
     time_previous_frame = time()
@@ -58,8 +62,8 @@ def main(console: 'Curses_Window'):
         console.erase()
 
         # Draw map on console
-        draw_map(console, map)
-        show_stats(console, int(1/timeframe), px, py, h)
+        draw_map(console, map, px, py, vision_depth)
+        show_stats(console, int(1/timeframe), px, py, vision_depth)
         
         # Refresh console
         console.refresh()
