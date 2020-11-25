@@ -83,8 +83,8 @@ def show_stats(console: 'Curses_Window', fps: 'integer', px: 'float', py: 'float
         depth (integer): Player's depth of vision
     """
     console.addstr(2*depth + 2, 0, f'Fps : {fps}', curses.color_pair(17))
-    console.addstr(2*depth + 3, 0, f'x : {px}', curses.color_pair(17))
-    console.addstr(2*depth + 4, 0, f'y : {py}', curses.color_pair(17))
+    console.addstr(2*depth + 3, 0, f' x  : {px}', curses.color_pair(17))
+    console.addstr(2*depth + 4, 0, f' y  : {py}', curses.color_pair(17))
 
 def place_player_in_map(map: '2D_Numpy_Array', w: 'integer', h: 'integer', player_location: 'tuple(float, float) or None'):
     """This method place player in the map
