@@ -44,7 +44,6 @@ def main(console: 'Curses_Window'):
         time_current_frame = time()
         timeframe = time_current_frame - time_previous_frame
         time_previous_frame = time_current_frame
-
         # Handle Player movement
         try:
             px, py = handle_keystrokes(console.getkey(), map, px, py)
