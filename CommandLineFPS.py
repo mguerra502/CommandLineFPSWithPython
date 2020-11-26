@@ -58,7 +58,7 @@ def main(console: 'Curses_Window'):
         time_previous_frame = time_current_frame
         # Handle Player movement
         try:
-            px, py = handle_keystrokes(console.getkey(), map, px, py)
+            px, py, pa = handle_keystrokes(console.getkey(), map, px, py, pa, speed, timeframe)
         except TypeError:
             # This is to handle x key (exit)
             break

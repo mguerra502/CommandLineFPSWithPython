@@ -112,7 +112,7 @@ def place_player_in_map(map: '2D_Numpy_Array', w: 'integer', h: 'integer', playe
         
         return tuple((px, py))
 
-def handle_keystrokes(key_stroke: 'Key_Event', map: '2D_Numpy_Array', px: 'float', py: 'float'):
+def handle_keystrokes(key_stroke: 'Key_Event', map: '2D_Numpy_Array', px: 'float', py: 'float', pa: 'float', speed: 'float', frame_time: 'float'):
     """This Method handles keystrokes by the user
 
     Args:
@@ -120,10 +120,13 @@ def handle_keystrokes(key_stroke: 'Key_Event', map: '2D_Numpy_Array', px: 'float
         map (2D_Numpy_Array): 2D Array representation of the map
         px (float): Player's x position
         py (float): Player's y position
-
+        pa (float): Player's angle
+        speed (float): Player's speed
+        frame_time (float): Time passed between frames
     Returns:
         px (float): Player's x position
         py (float): Player's y position
+        pa (float): Player's angle
     """
     # Quit game
     if key_stroke == 'x':
@@ -131,40 +134,32 @@ def handle_keystrokes(key_stroke: 'Key_Event', map: '2D_Numpy_Array', px: 'float
 
     # move forward
     if key_stroke == 'w':
-        if map[int(px), int(py - 1)] != 1:
+        if map[int(px + cos(pa) * speed * frame_time), int(py + sin(pa) * speed * frame_time)] != 1:
             map[int(px), int(py)] = 0
-            py = py - 1
+            px += cos(pa) * speed * frame_time
+            py += sin(pa) * speed * frame_time
             map[int(px), int(py)] = 2
-            return px, py
 
     # move backwards
     if key_stroke == 's':
-        if map[int(px), int(py + 1)] != 1:
+        if map[int(px - cos(pa) * speed * frame_time), int(py - sin(pa) * speed * frame_time)] != 1:
             map[int(px), int(py)] = 0
-            py = py + 1
+            px -= cos(pa) * speed * frame_time
+            py -= sin(pa) * speed * frame_time
             map[int(px), int(py)] = 2
-            return px, py
 
     # Rotate left
     # This one should be strafe left
     if key_stroke == 'a':
-        if map[int(px - 1), int(py)] != 1:
-            map[int(px), int(py)] = 0
-            px = px - 1
-            map[int(px), int(py)] = 2
-            return px, py
+        pa -= (speed * 0.75)*frame_time
 
     # Rotate right
     # This one should be strafe right
     if key_stroke == 'd':
-        if map[int(px + 1), int(py)] != 1:
-            map[int(px), int(py)] = 0
-            px = px + 1
-            map[int(px), int(py)] = 2
-            return px, py
+        pa += (speed * 0.75)*frame_time
 
     # Finally, if not key matched then return same px, py
-    return px, py
+    return px, py, pa
 
 def render_world(
     console: 'Curses_Window',
