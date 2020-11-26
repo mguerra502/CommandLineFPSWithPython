@@ -1,4 +1,4 @@
-from numpy import zeros
+from numpy import zeros, cos, sin
 from random import randint
 import curses
 
@@ -165,3 +165,81 @@ def handle_keystrokes(key_stroke: 'Key_Event', map: '2D_Numpy_Array', px: 'float
 
     # Finally, if not key matched then return same px, py
     return px, py
+
+def render_world(
+    console: 'Curses_Window',
+    map: '2D_Numpy_Array',
+    world_screen_width: 'integer',
+    world_screen_height: 'integer',
+    px: 'float',
+    py: 'float',
+    pa: 'float',
+    field_of_vision: 'float',
+    depth: 'integer',
+    map_width: 'integer',
+    map_depth: 'integer'
+):
+    # Start parsing columns of the screen
+    for i in range(world_screen_width):
+        # Get angle of ray for every column in screen
+        ray_angle = (pa - field_of_vision/2.0) + (float(i)/float(world_screen_width))*field_of_vision
+
+        # Find distance to closest wall
+        step_size = 0.1
+        distance_to_wall = 0.0
+
+        # Unit vector for ray in space
+        eye_x = cos(ray_angle)
+        eye_y = sin(ray_angle)
+
+        # Increment ray from player, along ray angle until it hits a wall
+        hit_wall_boundary = False
+        while True:
+            # Increase distance to wall
+            distance_to_wall += step_size
+            ray_x = int(px + eye_x*distance_to_wall)
+            ray_y = int(py + eye_y*distance_to_wall)
+            # Check if ray is out of bounds
+            if (ray_x < 0 or ray_x >= map_width or ray_y < 0 or ray_y >= map_depth):
+                # Ray is out of bounds, set distance_to_wall to depth
+                distance_to_wall = depth
+
+                break
+            else:
+                # Ray is inbound, check if hits a wall
+                if map[int(ray_x), int(ray_y)] == 1:
+                    break
+
+        # Calculate distance to ceiling a floor
+        ceiling_dist = world_screen_height/2.0 - world_screen_height/distance_to_wall
+        floor_dist = float(world_screen_height) - ceiling_dist
+
+        # Now, start parsing through every row of the screen
+        for j in range(world_screen_height):
+            
+            if j <= ceiling_dist:
+                console.addstr(j, 2*depth + 1 + i, ' ', curses.color_pair(233))
+            elif j > ceiling_dist and j <= floor_dist:
+                char_value = u'\u2593'
+                if hit_wall_boundary:
+                    wall_shade = 233
+                    char_value = ' '
+                else:
+                    wall_shade = int((-22/depth)*distance_to_wall + 254)
+                    if wall_shade > 254:
+                        wall_shade = 254
+                    if wall_shade <= 233:
+                        wall_shade = 233
+                        char_value = ' '
+
+                console.addstr(j, 2*depth + 1 + i, char_value, curses.color_pair(wall_shade))
+            else:
+                floor_dist = 1.0 - ((float(j) - world_screen_height/2.0)/(world_screen_height/2.0))
+                floor_shade = int(-22*floor_dist + 254)
+                if floor_shade > 254:
+                    floor_shade = 254
+                if floor_shade < 233:
+                    floor_shade = 233
+
+                console.addstr(j, 2*depth + 1 + i, u'\u2591', curses.color_pair(floor_shade))
+                
