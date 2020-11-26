@@ -35,7 +35,7 @@ def main(console: 'Curses_Window'):
     map[int(px)][int(py)] = 2
 
     # Screen properties
-    world_screen_width = 120
+    world_screen_width = 180
     world_screen_height = 40
 
     # Vision depth
@@ -43,7 +43,7 @@ def main(console: 'Curses_Window'):
     vision_depth = 8
 
     pa = pi # Player's angle
-    field_of_vision = pi/4.0 # field of view
+    field_of_vision = pi/2.0 # field of view
     speed = 5.0 # speed of movement
 
     # Initialise elapsed time variables
@@ -71,7 +71,7 @@ def main(console: 'Curses_Window'):
 
         # Draw map on console
         draw_map(console, map, px, py, vision_depth)
-        show_stats(console, int(1/timeframe), px, py, vision_depth)
+        show_stats(console, int(1/timeframe), px, py, pa, vision_depth)
         render_world(console, map, world_screen_width, world_screen_height, px, py, pa, field_of_vision, vision_depth, map_width, map_depth)
         
         # Refresh console
