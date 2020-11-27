@@ -1,6 +1,8 @@
 from numpy import array, zeros, pi, cos, sin, sqrt, arccos
 from time import time
+from intall_requirements import check_requirements
 import curses
+import os
 
 from fps_utils import load_map, draw_map, place_player_in_map, handle_keystrokes, show_stats, render_world
 
@@ -80,6 +82,8 @@ def main(console: 'Curses_Window'):
     
 
 if __name__ == '__main__':
+    # Run requirements if needed
+    check_requirements('requirements.txt', 0, f'{os.path.dirname(os.path.realpath(__file__))}/{os.path.basename(__file__)}')
     # Define console
     console = curses.initscr()
     console.nodelay(True)
