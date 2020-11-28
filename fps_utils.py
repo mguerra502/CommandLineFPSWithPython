@@ -101,12 +101,12 @@ def place_player_in_map(map: '2D_Numpy_Array', w: 'integer', h: 'integer', playe
         tuple(float, float) or None: Player's (x, y) position. None when player is placed inside a wall
     """
     if player_location is None:
-        px, py = float(randint(1, w - 2)), float(randint(1, h - 2))
+        px, py = float(randint(1, w - 2)) + 0.1, float(randint(1, h - 2)) + 0.1
         while True:
             if map[int(px), int(py)] != 1:
                 return tuple((px, py))
             else:
-                px, py = float(randint(1, w - 2)), float(randint(1, h - 2))
+                px, py = float(randint(1, w - 2)) + 0.1, float(randint(1, h - 2)) + 0.1
     else:
         px, py = float(player_location[0]), float(player_location[1])
         if map[int(px), int(py)] == 1:
@@ -136,18 +136,18 @@ def handle_keystrokes(key_stroke: 'Key_Event', map: '2D_Numpy_Array', px: 'float
 
     # move forward
     if key_stroke == 'w':
-        if map[int(px + cos(pa) * speed * frame_time), int(py + sin(pa) * speed * frame_time)] != 1:
+        if map[int(px + cos(pa) * speed * frame_time + 0.1), int(py + sin(pa) * speed * frame_time + 0.1)] != 1:
             map[int(px), int(py)] = 0
-            px += cos(pa) * speed * frame_time
-            py += sin(pa) * speed * frame_time
+            px += cos(pa) * speed * frame_time + 0.1
+            py += sin(pa) * speed * frame_time + 0.1
             map[int(px), int(py)] = 2
 
     # move backwards
     if key_stroke == 's':
-        if map[int(px - cos(pa) * speed * frame_time), int(py - sin(pa) * speed * frame_time)] != 1:
+        if map[int(px - cos(pa) * speed * frame_time + 0.1), int(py - sin(pa) * speed * frame_time + 0.1)] != 1:
             map[int(px), int(py)] = 0
-            px -= cos(pa) * speed * frame_time
-            py -= sin(pa) * speed * frame_time
+            px -= cos(pa) * speed * frame_time + 0.1
+            py -= sin(pa) * speed * frame_time + 0.1
             map[int(px), int(py)] = 2
 
     # Rotate left
