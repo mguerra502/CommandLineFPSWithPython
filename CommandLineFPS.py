@@ -10,7 +10,7 @@ def curses_properties():
     curses.noecho()
     curses.cbreak()
     curses.curs_set(0)
-    curses.resizeterm(200, 200)
+    curses.resizeterm(250, 250)
     curses.start_color()
     curses.use_default_colors()
     for i in range(0, curses.COLORS):
@@ -42,10 +42,10 @@ def main(console: 'Curses_Window'):
 
     # Vision depth
     # TODO: This is a value that could change
-    vision_depth = 8
+    vision_depth = 10
 
     pa = pi # Player's angle
-    field_of_vision = pi/2.0 # field of view
+    field_of_vision = pi/3.0 # field of view
     speed = 5.0 # speed of movement
 
     # Initialise elapsed time variables
@@ -83,7 +83,7 @@ def main(console: 'Curses_Window'):
 
 if __name__ == '__main__':
     # Run requirements if needed
-    check_requirements('requirements.txt', 0, f'{os.path.dirname(os.path.realpath(__file__))}/{os.path.basename(__file__)}')
+    check_requirements('requirements.txt', 1, f'{os.path.dirname(os.path.realpath(__file__))}/{os.path.basename(__file__)}')
     # Define console
     console = curses.initscr()
     console.nodelay(True)

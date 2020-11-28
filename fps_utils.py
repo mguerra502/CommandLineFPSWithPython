@@ -1,4 +1,4 @@
-from numpy import zeros, cos, sin, pi
+from numpy import zeros, cos, sin, pi, arccos, sqrt
 from random import randint
 import curses
 
@@ -205,6 +205,33 @@ def render_world(
             else:
                 # Ray is inbound, check if hits a wall
                 if map[int(ray_x), int(ray_y)] == 1:
+                    # Here we need to highlight block boundaries before break statement
+                    p = []
+                    for tx in range(2):
+                        for ty in range(2):
+                            # Angle of corner to eye
+                            vx = float(ray_x) + float(tx) - px
+                            vy = float(ray_y) + float(ty) - py
+                            d = sqrt(vx**2 + vy**2)
+                            if d == 0.0:
+                                d = 0.0000000001
+                            dot = (eye_x*vx/d) + (eye_y*vy/d)
+                            p.append(tuple((d, dot)))
+
+                    # Sort pairs from closest to farthest
+                    p.sort(key=lambda tup: tup[0])
+
+                    # First 2/3 are the closest. Never 4 at the same time
+                    bound = 0.01
+                    if arccos(p[0][1]) < bound:
+                        hit_wall_boundary = True
+                    
+                    if arccos(p[1][1]) < bound:
+                        hit_wall_boundary = True
+
+                    if arccos(p[2][1]) < bound:
+                        hit_wall_boundary = True
+
                     break
 
         # Calculate distance to ceiling a floor
@@ -213,7 +240,6 @@ def render_world(
 
         # Now, start parsing through every row of the screen
         for j in range(world_screen_height):
-            
             if j <= ceiling_dist:
                 console.addstr(j, 2*depth + 1 + i, ' ', curses.color_pair(233))
             elif j > ceiling_dist and j <= floor_dist:
