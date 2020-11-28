@@ -22,7 +22,6 @@ def check_requirements(requirements_file: 'string', requirements_installed_flag:
         requirements_installed_flag (integer): flag that tells whether the requirements have to be installed or not
         invoking_script (string): absolute path of the script that is invoking this method
     """
-    print(invoking_script)
     if not requirements_installed_flag:
         install(requirements_file)
         text_to_search = "check_requirements('requirements.txt', 0, f'{os.path.dirname(os.path.realpath(__file__))}/{os.path.basename(__file__)}')"
