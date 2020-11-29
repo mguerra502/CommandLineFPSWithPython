@@ -63,7 +63,7 @@ def GameLoop(console: 'Curses_Window'):
         except TypeError:
             # This is to handle x key (exit)
             break
-        except:
+        except curses.error:
             # This handles no user input
             pass
 
