@@ -1,8 +1,3 @@
-import os
-from intall_requirements import check_requirements
-# Run requirements if needed
-check_requirements('requirements.txt', 0, f'{os.path.dirname(os.path.realpath(__file__))}/{os.path.basename(__file__)}')
-
 # Import required modules
 from numpy import array, zeros, pi, cos, sin, sqrt, arccos
 from time import time
@@ -20,7 +15,7 @@ def curses_properties():
     for i in range(0, curses.COLORS):
         curses.init_pair(i + 1, i, -1)
 
-def main(console: 'Curses_Window'):
+def GameLoop(console: 'Curses_Window'):
     """This is the main method of the 'fps' in the command line
 
     Args:
@@ -68,7 +63,7 @@ def main(console: 'Curses_Window'):
         except TypeError:
             # This is to handle x key (exit)
             break
-        except:
+        except curses.error:
             # This handles no user input
             pass
 
@@ -85,7 +80,7 @@ def main(console: 'Curses_Window'):
 
     
 
-if __name__ == '__main__':
+def CommandLineFPS():
     # Define console
     console = curses.initscr()
     console.nodelay(True)
@@ -95,7 +90,7 @@ if __name__ == '__main__':
     # Set curses properties
     curses_properties()
     try:
-        main(console)
+        GameLoop(console)
     finally:
         curses.echo()
         curses.nocbreak()
