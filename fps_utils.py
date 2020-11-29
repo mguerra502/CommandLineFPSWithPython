@@ -136,18 +136,18 @@ def handle_keystrokes(key_stroke: 'Key_Event', map: '2D_Numpy_Array', px: 'float
 
     # move forward
     if key_stroke == 'w':
-        if map[int(px + cos(pa) * speed * frame_time + 0.1), int(py + sin(pa) * speed * frame_time + 0.1)] != 1:
+        if map[int(px + cos(pa) * speed * frame_time), int(py + sin(pa) * speed * frame_time)] != 1:
             map[int(px), int(py)] = 0
-            px += cos(pa) * speed * frame_time + 0.1
-            py += sin(pa) * speed * frame_time + 0.1
+            px += cos(pa) * speed * frame_time
+            py += sin(pa) * speed * frame_time
             map[int(px), int(py)] = 2
 
     # move backwards
     if key_stroke == 's':
-        if map[int(px - cos(pa) * speed * frame_time + 0.1), int(py - sin(pa) * speed * frame_time + 0.1)] != 1:
+        if map[int(px - cos(pa) * speed * frame_time), int(py - sin(pa) * speed * frame_time)] != 1:
             map[int(px), int(py)] = 0
-            px -= cos(pa) * speed * frame_time + 0.1
-            py -= sin(pa) * speed * frame_time + 0.1
+            px -= cos(pa) * speed * frame_time
+            py -= sin(pa) * speed * frame_time
             map[int(px), int(py)] = 2
 
     # Rotate left
